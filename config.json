@@ -1,0 +1,88 @@
+{
+  "version": "1.0",
+  "admin_password": "wellway",
+  "corpora": [
+    {
+      "id": "main",
+      "name": "Главный корпус",
+      "entrance": "node_main_entrance",
+      "floors": [
+        {
+          "id": "1",
+          "zones": [
+            {
+              "name": "Правое крыло",
+              "range": "101-110",
+              "node": "node_1f_right_entrance"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "specialties": [
+    {
+      "id": "ophthalmologist",
+      "name": "Окулист",
+      "synonyms": ["офтальмолог", "глазной врач"],
+      "rooms": [
+        {
+          "number": "205",
+          "name": "Кабинет осмотра сетчатки",
+          "building": "main",
+          "floor": "2",
+          "node": "node_2f_205"
+        },
+        {
+          "number": "207",
+          "name": "Кабинет лазерной коррекции",
+          "building": "main",
+          "floor": "2",
+          "node": "node_2f_207"
+        }
+      ],
+      "doctor": "Иванова А.П.",
+      "schedule": "Пн-Пт 9:00–15:00",
+      "status": "работает",
+      "show_details": false
+    },
+    {
+      "id": "surgeon",
+      "name": "Хирург",
+      "synonyms": ["хир", "врач-хирург"],
+      "rooms": [
+        {
+          "number": "314",
+          "name": "Хирургический кабинет",
+          "building": "main",
+          "floor": "3",
+          "node": "node_3f_314"
+        }
+      ],
+      "doctor": "Петров С.В.",
+      "schedule": "Вт, Чт 10:00–14:00",
+      "status": "работает",
+      "show_details": false
+    }
+  ],
+  "qr_nodes": [
+    {
+      "id": "node_main_entrance",
+      "name": "Главный вход",
+      "building": "main",
+      "floor": "1"
+    },
+    {
+      "id": "node_1f_right_entrance",
+      "name": "Вход в правое крыло (1 этаж)",
+      "building": "main",
+      "floor": "1"
+    },
+    {
+      "id": "node_2f_205",
+      "name": "Кабинет 205",
+      "building": "main",
+      "floor": "2"
+    }
+  ]
+}

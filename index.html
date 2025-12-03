@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WellWay Navigator</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="assets/icons/compass.svg">
+</head>
+<body>
+  <header class="header">
+    <img src="assets/icons/logo-wellway.svg" alt="WellWay" class="logo">
+    <h1>Маршрут здоровья</h1>
+  </header>
+
+  <main class="container" id="app">
+    <!-- Шаг 1: выбор способа -->
+    <div id="step-choose" class="step">
+      <p class="prompt">Как найти кабинет?</p>
+      <button class="btn btn-primary" onclick="showStep('by-number')">Я знаю номер кабинета</button>
+      <button class="btn btn-secondary" onclick="showStep('by-specialty')">Я ищу специалиста</button>
+      <button class="btn btn-help" onclick="navigateTo('help')">Помощь → регистратура</button>
+    </div>
+
+    <!-- Шаг 2a: ввод номера -->
+    <div id="step-by-number" class="step hidden">
+      <label for="room-input">Номер кабинета:</label>
+      <input type="text" id="room-input" placeholder="Например: 314" autocomplete="off">
+      <div class="btn-group">
+        <button class="btn" onclick="showStep('choose')">← Назад</button>
+        <button class="btn btn-primary" onclick="searchByNumber()">Найти</button>
+      </div>
+      <div id="room-suggestions" class="suggestions hidden"></div>
+    </div>
+
+    <!-- Шаг 2b: выбор специальности -->
+    <div id="step-by-specialty" class="step hidden">
+      <p class="prompt">Выберите специальность:</p>
+      <div id="specialties-list"></div>
+      <button class="btn" onclick="showStep('choose')">← Назад</button>
+    </div>
+
+    <!-- Результат: маршрут -->
+    <div id="step-result" class="step hidden">
+      <h2 id="result-title">Маршрут построен</h2>
+      <div id="route-instructions"></div>
+      <div id="route-map" class="map-placeholder">🗺️ Карта (SVG будет здесь)</div>
+      <button class="btn btn-primary" onclick="reset()">Новое направление</button>
+    </div>
+  </main>
+
+  <script src="lib/core.js"></script>
+  <script>
+    let config = null;
+
+    async function loadConfig() {
+      const res = await fetch('config.json');
+      config = await res.json();
+    }
+
+    async function init() {
+      await loadConfig();
+      renderSpecialties();
+      // Если URL содержит ?from=node_X → начать с точки X (для QR)
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromNode = urlParams.get('from');
+      if (fromNode) {
+        // Можно сохранить в localStorage или использовать в future Dijkstra
+        console.log("Начальная точка:", fromNode);
+      }
+    }
+
+    function renderSpecialties() {
+      const list = document.getElementById('specialties-list');
+      list.innerHTML = '';
+      config.specialties.forEach(spec => {
+        const btn = document.createElement('button');
+        btn.className = 'btn specialty-btn';
+        btn.textContent = spec.name;
+        btn.onclick = () => selectSpecialty(spec);
+        list.appendChild(btn);
+      });
+    }
+
+    function selectSpecialty(spec) {
+      if (spec.rooms.length === 1) {
+        buildRoute(spec.rooms[0]);
+      } else {
+        // TODO: показать выбор из нескольких
+        alert(`Выберите кабинет:\n${spec.rooms.map(r => `${r.name} — каб. ${r.number}`).join('\n')}`);
+        // Реализация — отдельный шаг с radiobutton'ами
+        buildRoute(spec.rooms[0]); // временно первый
+      }
+    }
+
+    function searchByNumber() {
+      const num = document.getElementById('room-input').value.trim();
+      if (!num) return;
+      // Найти кабинет по номеру (простой линейный поиск)
+      for (const spec of config.specialties) {
+        const room = spec.rooms.find(r => r.number === num);
+        if (room) {
+          buildRoute(room);
+          return;
+        }
+      }
+      alert(`Кабинет ${num} не найден. Проверьте номер.`);
+    }
+
+    function buildRoute(room) {
+      document.getElementById('result-title').textContent = `→ Кабинет ${room.number}`;
+      const instructions = document.getElementById('route-instructions');
+      instructions.innerHTML = `
+        <ol>
+          <li>Идите к лифту</li>
+          <li>Поднимитесь на ${room.floor} этаж</li>
+          <li>Пройдите в ${room.name || 'нужное крыло'}</li>
+          <li>Кабинет ${room.number} — прямо перед вами</li>
+        </ol>
+      `;
+      showStep('result');
+    }
+
+    function navigateTo(target) {
+      if (target === 'help') {
+        alert("Маршрут до регистратуры: поверните направо от входа, кабинет 101.");
+        // Можно вызвать buildRoute() для "регистратуры", если она в config
+      }
+    }
+
+    function showStep(id) {
+      document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`step-${id}`).classList.remove('hidden');
+    }
+
+    function reset() {
+      showStep('choose');
+      document.getElementById('room-input').value = '';
+      document.getElementById('room-suggestions').classList.add('hidden');
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

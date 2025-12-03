@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>WellWay Admin</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="admin-login">
+    <h2>🔐 Административная панель</h2>
+    <form id="login-form">
+      <label>Логин: <strong>admin</strong> (фиксированный)</label><br>
+      <label>Пароль:</label>
+      <input type="password" id="password" placeholder="••••••••" required>
+      <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+    <p class="hint">Демо-пароль: <code>wellway</code></p>
+  </div>
+
+  <script src="../lib/auth.js"></script>
+  <script>
+    document.getElementById('login-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const pwd = document.getElementById('password').value;
+      const success = await auth.login(pwd);
+      if (success) {
+        window.location.href = 'setup-wizard.html';
+      } else {
+        alert('❌ Неверный пароль');
+      }
+    };
+  </script>
+</body>
+</html>

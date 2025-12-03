@@ -1,0 +1,122 @@
+:root {
+  --primary: #4CAF50;
+  --secondary: #2196F3;
+  --help: #FF9800;
+  --bg: #f9f9f9;
+  --text: #333;
+  --border: #ddd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.header {
+  background: white;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.step {
+  animation: fadeIn 0.3s;
+}
+
+.hidden {
+  display: none;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background: #eee;
+  color: var(--text);
+}
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-secondary { background: var(--secondary); color: white; }
+.btn-help { background: var(--help); color: white; }
+
+.specialty-btn {
+  text-align: left;
+  padding-left: 1.5rem;
+  background: white;
+  border: 1px solid var(--border);
+}
+
+.suggestions {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.prompt {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.map-placeholder {
+  background: #e0f7fa;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  margin: 1rem 0;
+  min-height: 150px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Админка */
+.admin-login, .admin-container {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+input, select {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 1rem;
+}
